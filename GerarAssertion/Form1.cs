@@ -9,7 +9,16 @@ namespace GerarAssertion
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            this.txt_urlsso.Text = "";
+            var configs = new LerESalvarConfiguracoes().LerConfiguracoes();
+
+            if (configs != null)
+            {
+                this.txt_clientId.Text = configs.clientId;
+                this.txt_urlsso.Text = configs.Url;
+                this.txt_file.Text = configs.PathArquivo;
+                this.txt_scope.Text = configs.Scopes;
+            }
+
             this.Refresh();
         }
 
@@ -68,6 +77,14 @@ namespace GerarAssertion
                         var token = GerarToken.GerarClientToken(clientId, assertionToken, scopes, url);
                         this.txt_token.Text = token;
                     }
+
+                    new LerESalvarConfiguracoes().GravarConfiguracoes(new ConfiguracoesDto()
+                    {
+                        clientId = clientId,
+                        PathArquivo = arquivo,
+                        Url = url,
+                        Scopes = scopes
+                    });
                 }
             }
             catch (Exception ex)
